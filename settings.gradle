@@ -1,0 +1,1 @@
+include ':okhttp3-persistent-cookiejar'
