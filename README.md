@@ -13,7 +13,8 @@ Usage
 Create an instance of `PersistentCookieJar` passing a `CookieCache` and a `CookiePersistor`:
 
 ```java
-ClearableCookieJar cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context))
+ClearableCookieJar cookieJar =
+                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(context));
 ```
 
 Then just add the CookieJar when building your OkHttp client:
@@ -24,9 +25,9 @@ OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .build();
 ```
 
-Characteristics
----------------
-This is a really simple library but here are some of the stuff that it provides:
+Features
+--------
+This is a really simple library but here are some of the things that it provides:
 * Possibility to clear the jar: `PersistentCookieJar` implements `ClearableCookieJar` interface that declares a `clear()` method for removing all cookies from the jar.
 
 * Decoupled and extensible: `CookieCache` and `CookiePersitor` are interfaces so you can provide your own implementation for each one.
