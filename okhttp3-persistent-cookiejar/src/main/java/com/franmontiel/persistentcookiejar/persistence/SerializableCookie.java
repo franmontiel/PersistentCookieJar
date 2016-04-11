@@ -37,16 +37,27 @@ public class SerializableCookie implements Serializable {
     public String encode(Cookie cookie) {
         this.cookie = cookie;
 
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = null;
+
         try {
-            ObjectOutputStream outputStream = new ObjectOutputStream(os);
-            outputStream.writeObject(this);
+            objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+            objectOutputStream.writeObject(this);
         } catch (IOException e) {
             Log.d(TAG, "IOException in encodeCookie", e);
             return null;
+        } finally {
+            if (objectOutputStream != null) {
+                try {
+                    // Closing a ByteArrayOutputStream has no effect, it can be used later (and is used in the return statement)
+                    objectOutputStream.close();
+                } catch (IOException e) {
+                    Log.d(TAG, "Stream not closed in encodeCookie", e);
+                }
+            }
         }
 
-        return byteArrayToHexString(os.toByteArray());
+        return byteArrayToHexString(byteArrayOutputStream.toByteArray());
     }
 
     /**
@@ -70,18 +81,28 @@ public class SerializableCookie implements Serializable {
     }
 
     public Cookie decode(String encodedCookie) {
+
         byte[] bytes = hexStringToByteArray(encodedCookie);
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
                 bytes);
+
         Cookie cookie = null;
+        ObjectInputStream objectInputStream = null;
         try {
-            ObjectInputStream objectInputStream = new ObjectInputStream(
-                    byteArrayInputStream);
+            objectInputStream = new ObjectInputStream(byteArrayInputStream);
             cookie = ((SerializableCookie) objectInputStream.readObject()).cookie;
         } catch (IOException e) {
             Log.d(TAG, "IOException in decodeCookie", e);
         } catch (ClassNotFoundException e) {
             Log.d(TAG, "ClassNotFoundException in decodeCookie", e);
+        } finally {
+            if (objectInputStream != null) {
+                try {
+                    objectInputStream.close();
+                } catch (IOException e) {
+                    Log.d(TAG, "Stream not closed in decodeCookie", e);
+                }
+            }
         }
         return cookie;
     }
