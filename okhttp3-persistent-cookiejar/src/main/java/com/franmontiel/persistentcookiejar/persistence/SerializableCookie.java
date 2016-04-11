@@ -28,8 +28,9 @@ import java.io.Serializable;
 import okhttp3.Cookie;
 
 public class SerializableCookie implements Serializable {
-    private static final String TAG = SerializableCookie.class
-            .getSimpleName();
+    private static final String TAG = SerializableCookie.class.getSimpleName();
+
+    private static final long serialVersionUID = -8594045714036645534L;
 
     private transient Cookie cookie;
 
@@ -101,7 +102,7 @@ public class SerializableCookie implements Serializable {
         return data;
     }
 
-    private static long NON_VALID_EXPIRES_AT = -1l;
+    private static long NON_VALID_EXPIRES_AT = -1L;
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.writeObject(cookie.name());
