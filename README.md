@@ -6,8 +6,21 @@ If you're looking for a OkHttp 2/HTTPUrlConnection persistent CookieStore it can
 
 Download
 --------
-It will be uploaded to JCenter as soon as possible. For now you can clone this repo.
-
+Step 1. Add the JitPack repository in your root build.gradle at the end of repositories:
+```groovy
+allprojects {
+    repositories {
+        ...
+        maven { url "https://jitpack.io" }
+    }
+}
+```
+Step 2. Add the dependency
+```groovy
+dependencies {
+    compile 'com.github.franmontiel:PersistentCookieJar:v0.9.3'
+}
+```
 Usage
 -----
 Create an instance of `PersistentCookieJar` passing a `CookieCache` and a `CookiePersistor`:
