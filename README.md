@@ -36,8 +36,9 @@ This is a really simple library but here are some of the things that it provides
 
 * Thread-safe: `PersistentCookieJar` public methods are synchronized so there is no need to worry about threading if you need to implement a `CookieCache` or a `CookiePersistor`.
 
-Proguard Configure
+ProGuard
 -------
+The following configuration is only needed for version 0.9.2 and below:
 ```
 -dontwarn com.franmontiel.persistentcookiejar.**
 -keep class com.franmontiel.persistentcookiejar.**
