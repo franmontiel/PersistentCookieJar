@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import okhttp3.Cookie;
 
@@ -39,9 +40,10 @@ public class SharedPrefsCookiePersistor implements CookiePersistor {
 
     @Override
     public List<Cookie> loadAll() {
-        List<Cookie> cookies = new ArrayList<>();
+        final Set<? extends Map.Entry<String, ?>> entrySet = sharedPreferences.getAll().entrySet();
+        final List<Cookie> cookies = new ArrayList<>(entrySet.size());
 
-        for (Map.Entry<String, ?> entry : sharedPreferences.getAll().entrySet()) {
+        for (Map.Entry<String, ?> entry : entrySet) {
             String serializedCookie = (String) entry.getValue();
             Cookie cookie = new SerializableCookie().decode(serializedCookie);
             cookies.add(cookie);
