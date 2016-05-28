@@ -28,13 +28,14 @@ import okhttp3.Cookie;
 
 public class SharedPrefsCookiePersistor implements CookiePersistor {
 
-    private SharedPreferences sharedPreferences;
+    private final SharedPreferences sharedPreferences;
 
     public SharedPrefsCookiePersistor(Context context) {
-        final String SHARED_PREFERENCES_NAME = "CookiePersistence";
+        this(context.getSharedPreferences("CookiePersistence", Context.MODE_PRIVATE));
+    }
 
-        sharedPreferences =
-                context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+    public SharedPrefsCookiePersistor(SharedPreferences sharedPreferences) {
+        this.sharedPreferences = sharedPreferences;
     }
 
     @Override
