@@ -43,7 +43,11 @@ public class SetCookieCache implements CookieCache {
      */
     private void updateCookies(Collection<IdentifiableCookie> cookies) {
         this.cookies.removeAll(cookies);
-        this.cookies.addAll(cookies);
+
+        for (IdentifiableCookie cookie : cookies) {
+            this.cookies.remove(cookie);
+            this.cookies.add(cookie);
+        }
     }
 
     @Override
