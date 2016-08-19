@@ -4,11 +4,13 @@ import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 
 import okhttp3.Cookie;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -31,5 +33,23 @@ public class SetCookieCacheTest {
         }
 
         assertTrue(size == 1);
+    }
+
+    @Test
+    public void updateCookieWithDifferentValues() throws Exception {
+        SetCookieCache cache = new SetCookieCache();
+
+        cache.addAll(Arrays.asList(
+                TestCookieCreator.createNonPersistentCookie("name", "first"),
+                TestCookieCreator.createNonPersistentCookie("name", "last")
+        ));
+
+        Iterator<Cookie> iterator = cache.iterator();
+        String value = null;
+        while (iterator.hasNext()) {
+            value = iterator.next().value();
+        }
+
+        assertEquals("last", value);
     }
 }

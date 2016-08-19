@@ -37,6 +37,17 @@ class TestCookieCreator {
                 .build();
     }
 
+    public static Cookie createNonPersistentCookie(String name, String value) {
+        return new Cookie.Builder()
+                .domain("domain.com")
+                .path("/")
+                .name(name)
+                .value(value)
+                .httpOnly()
+                .secure()
+                .build();
+    }
+
     public static Cookie createExpiredCookie() {
         return new Cookie.Builder()
                 .domain("domain.com")
