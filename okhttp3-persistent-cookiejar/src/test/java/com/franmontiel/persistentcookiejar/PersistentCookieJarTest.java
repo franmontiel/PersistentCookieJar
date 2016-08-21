@@ -3,6 +3,7 @@ package com.franmontiel.persistentcookiejar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,5 +74,10 @@ public class PersistentCookieJarTest {
 
         persistentCookieJar.saveFromResponse(url, Collections.singletonList(TestCookieCreator.createExpiredCookie()));
         assertTrue(persistentCookieJar.loadForRequest(url).isEmpty());
+    }
+
+    @After
+    public void clearCookies() {
+        persistentCookieJar.clear();
     }
 }

@@ -3,6 +3,8 @@ package com.franmontiel.persistentcookiejar;
 import com.franmontiel.persistentcookiejar.persistence.CookiePersistor;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -24,11 +26,18 @@ import static org.junit.Assert.assertTrue;
 @Config(manifest = Config.NONE)
 public class SharedPrefsCookiePersistorTest {
 
+    private CookiePersistor persistor;
+
+    @Before
+    public void createPersistor() {
+        persistor = new SharedPrefsCookiePersistor(RuntimeEnvironment.application.getApplicationContext());
+    }
+
     @Test
     public void persistCookie() throws Exception {
         Cookie cookie = TestCookieCreator.createPersistentCookie(false);
 
-        CookiePersistor persistor = new SharedPrefsCookiePersistor(RuntimeEnvironment.application.getApplicationContext());
+        persistor = new SharedPrefsCookiePersistor(RuntimeEnvironment.application.getApplicationContext());
         persistor.saveAll(Collections.singletonList(cookie));
         List<Cookie> cookies = persistor.loadAll();
 
@@ -39,7 +48,7 @@ public class SharedPrefsCookiePersistorTest {
     public void persistNonPersisentCookie() throws Exception {
         Cookie cookie = TestCookieCreator.createNonPersistentCookie();
 
-        CookiePersistor persistor = new SharedPrefsCookiePersistor(RuntimeEnvironment.application.getApplicationContext());
+        persistor = new SharedPrefsCookiePersistor(RuntimeEnvironment.application.getApplicationContext());
         persistor.saveAll(Collections.singletonList(cookie));
 
         assertTrue(persistor.loadAll().isEmpty());
@@ -49,7 +58,7 @@ public class SharedPrefsCookiePersistorTest {
     public void removePersistedCookies() throws Exception {
         Cookie cookie = TestCookieCreator.createPersistentCookie(false);
 
-        CookiePersistor persistor = new SharedPrefsCookiePersistor(RuntimeEnvironment.application.getApplicationContext());
+        persistor = new SharedPrefsCookiePersistor(RuntimeEnvironment.application.getApplicationContext());
         persistor.saveAll(Collections.singletonList(cookie));
         persistor.removeAll(Collections.singletonList(cookie));
 
@@ -60,10 +69,15 @@ public class SharedPrefsCookiePersistorTest {
     public void clearPersistedCookies() throws Exception {
         Cookie cookie = TestCookieCreator.createPersistentCookie(false);
 
-        CookiePersistor persistor = new SharedPrefsCookiePersistor(RuntimeEnvironment.application.getApplicationContext());
+        persistor = new SharedPrefsCookiePersistor(RuntimeEnvironment.application.getApplicationContext());
         persistor.saveAll(Collections.singletonList(cookie));
         persistor.clear();
 
         assertTrue(persistor.loadAll().isEmpty());
+    }
+
+    @After
+    public void clearPersistor(){
+        persistor.clear();
     }
 }

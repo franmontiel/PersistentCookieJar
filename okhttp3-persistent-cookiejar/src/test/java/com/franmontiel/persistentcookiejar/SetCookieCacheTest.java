@@ -9,6 +9,7 @@ import java.util.Iterator;
 
 import okhttp3.Cookie;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -31,5 +32,18 @@ public class SetCookieCacheTest {
         }
 
         assertTrue(size == 1);
+    }
+
+    @Test
+    public void updateCookieWithDifferentValues() throws Exception {
+        SetCookieCache cache = new SetCookieCache();
+
+        cache.addAll(Collections.singleton(TestCookieCreator.createNonPersistentCookie("name", "first")));
+        cache.addAll(Collections.singleton(TestCookieCreator.createNonPersistentCookie("name", "last")));
+
+        Iterator<Cookie> iterator = cache.iterator();
+        String value = iterator.next().value();
+
+        assertEquals("last", value);
     }
 }
