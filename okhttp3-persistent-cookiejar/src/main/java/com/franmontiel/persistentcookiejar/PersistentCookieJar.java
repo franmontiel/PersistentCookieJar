@@ -63,11 +63,17 @@ public class PersistentCookieJar implements ClearableCookieJar {
 
         persistor.removeAll(removedCookies);
 
-        return  validCookies;
+        return validCookies;
     }
 
     private static boolean isCookieExpired(Cookie cookie) {
         return cookie.expiresAt() < System.currentTimeMillis();
+    }
+
+    @Override
+    public void clearSession() {
+        cache.clear();
+        cache.addAll(persistor.loadAll());
     }
 
     synchronized public void clear() {

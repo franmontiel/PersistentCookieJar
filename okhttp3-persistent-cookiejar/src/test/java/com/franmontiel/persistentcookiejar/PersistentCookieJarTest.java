@@ -76,6 +76,18 @@ public class PersistentCookieJarTest {
         assertTrue(persistentCookieJar.loadForRequest(url).isEmpty());
     }
 
+    @Test
+    public void clearSessionCookies() {
+        Cookie persistentCookie = TestCookieCreator.createPersistentCookie(false);
+        persistentCookieJar.saveFromResponse(url, Collections.singletonList(persistentCookie));
+        persistentCookieJar.saveFromResponse(url, Collections.singletonList(TestCookieCreator.createNonPersistentCookie()));
+
+        persistentCookieJar.clearSession();
+
+        assertTrue(persistentCookieJar.loadForRequest(url).size() == 1);
+        assertEquals(persistentCookieJar.loadForRequest(url).get(0), persistentCookie);
+    }
+
     @After
     public void clearCookies() {
         persistentCookieJar.clear();
