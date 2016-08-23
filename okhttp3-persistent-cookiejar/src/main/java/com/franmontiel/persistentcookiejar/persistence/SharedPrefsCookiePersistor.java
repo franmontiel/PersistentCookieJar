@@ -40,7 +40,7 @@ public class SharedPrefsCookiePersistor implements CookiePersistor {
 
     @Override
     public List<Cookie> loadAll() {
-        List<Cookie> cookies = new ArrayList<>();
+        List<Cookie> cookies = new ArrayList<>(sharedPreferences.getAll().size());
 
         for (Map.Entry<String, ?> entry : sharedPreferences.getAll().entrySet()) {
             String serializedCookie = (String) entry.getValue();
