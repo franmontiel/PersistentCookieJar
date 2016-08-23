@@ -4,46 +4,50 @@ import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 
 import okhttp3.Cookie;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Francisco J. Montiel on 11/02/16.
  */
 public class SetCookieCacheTest {
 
+
+    /**
+     * Cookie equality used to update: same cookie-name, domain-value, and path-value.
+     */
     @Test
-    public void updateCookie() throws Exception {
+    public void addAll_WithACookieEqualsToOneAlreadyStored_ShouldUpdateTheStoreCookie() {
         SetCookieCache cache = new SetCookieCache();
+        cache.addAll(Collections.singleton(TestCookieCreator.createNonPersistentCookie("name", "first")));
 
-        cache.addAll(Collections.singleton(TestCookieCreator.createPersistentCookie(false)));
-        cache.addAll(Collections.singleton(TestCookieCreator.createPersistentCookie(false)));
+        Cookie newCookie = TestCookieCreator.createNonPersistentCookie("name", "last");
+        cache.addAll(Collections.singleton(newCookie));
 
-        Iterator<Cookie> iterator = cache.iterator();
-        int size = 0;
-        while (iterator.hasNext()) {
-            iterator.next();
-            size++;
-        }
-
-        assertTrue(size == 1);
+        Cookie addedCookie = cache.iterator().next();
+        assertEquals(newCookie, addedCookie);
     }
 
+    /**
+     * This is not RFC Compilant but strange things happen in the real world and it is intended to maintain a common behavior between Cache and Persistor
+     * <p>
+     * Cookie equality used to update: same cookie-name, domain-value, and path-value.
+     */
     @Test
-    public void updateCookieWithDifferentValues() throws Exception {
+    public void addAll_WithMultipleEqualCookies_LastOneShouldRemain() {
         SetCookieCache cache = new SetCookieCache();
+        Cookie equalCookieThatShouldNotBeAdded = TestCookieCreator.createPersistentCookie("name", "first");
+        Cookie equalCookieThatShouldBeAdded = TestCookieCreator.createPersistentCookie("name", "last");
 
-        cache.addAll(Collections.singleton(TestCookieCreator.createNonPersistentCookie("name", "first")));
-        cache.addAll(Collections.singleton(TestCookieCreator.createNonPersistentCookie("name", "last")));
+        cache.addAll(Arrays.asList(
+                equalCookieThatShouldNotBeAdded,
+                equalCookieThatShouldBeAdded));
 
-        Iterator<Cookie> iterator = cache.iterator();
-        String value = iterator.next().value();
-
-        assertEquals("last", value);
+        Cookie addedCookie = cache.iterator().next();
+        assertEquals(equalCookieThatShouldBeAdded, addedCookie);
     }
 }

@@ -11,6 +11,7 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,10 +35,9 @@ public class SharedPrefsCookiePersistorTest {
     }
 
     @Test
-    public void persistCookie() throws Exception {
+    public void saveAll_ShouldSaveCookies() throws Exception {
         Cookie cookie = TestCookieCreator.createPersistentCookie(false);
 
-        persistor = new SharedPrefsCookiePersistor(RuntimeEnvironment.application.getApplicationContext());
         persistor.saveAll(Collections.singletonList(cookie));
         List<Cookie> cookies = persistor.loadAll();
 
@@ -45,39 +45,54 @@ public class SharedPrefsCookiePersistorTest {
     }
 
     @Test
-    public void persistNonPersisentCookie() throws Exception {
-        Cookie cookie = TestCookieCreator.createNonPersistentCookie();
+    public void saveAll_WithNonPersistentCookie_ShouldNotSaveTheCookie() throws Exception {
+        Cookie nonPersistentCookie = TestCookieCreator.createNonPersistentCookie();
 
-        persistor = new SharedPrefsCookiePersistor(RuntimeEnvironment.application.getApplicationContext());
-        persistor.saveAll(Collections.singletonList(cookie));
+        persistor.saveAll(Collections.singletonList(nonPersistentCookie));
 
         assertTrue(persistor.loadAll().isEmpty());
     }
 
     @Test
-    public void removePersistedCookies() throws Exception {
+    public void removeAll_ShouldRemoveCookies() throws Exception {
         Cookie cookie = TestCookieCreator.createPersistentCookie(false);
-
-        persistor = new SharedPrefsCookiePersistor(RuntimeEnvironment.application.getApplicationContext());
         persistor.saveAll(Collections.singletonList(cookie));
+
         persistor.removeAll(Collections.singletonList(cookie));
 
         assertTrue(persistor.loadAll().isEmpty());
     }
 
     @Test
-    public void clearPersistedCookies() throws Exception {
+    public void clear_ShouldClearAllCookies() throws Exception {
         Cookie cookie = TestCookieCreator.createPersistentCookie(false);
-
-        persistor = new SharedPrefsCookiePersistor(RuntimeEnvironment.application.getApplicationContext());
         persistor.saveAll(Collections.singletonList(cookie));
+
         persistor.clear();
 
         assertTrue(persistor.loadAll().isEmpty());
     }
 
+    /**
+     * This is not RFC Compilant but strange things happen in the real world and it is intended to maintain a common behavior between Cache and Persistor
+     * <p>
+     * Cookie equality used to update: same cookie-name, domain-value, and path-value.
+     */
+    @Test
+    public void saveAll_WithMultipleEqualCookies_LastOneShouldBeSaved() {
+        Cookie equalCookieThatShouldNotBeAdded = TestCookieCreator.createPersistentCookie("name", "first");
+        Cookie equalCookieThatShouldBeAdded = TestCookieCreator.createPersistentCookie("name", "last");
+
+        persistor.saveAll(Arrays.asList(
+                equalCookieThatShouldNotBeAdded,
+                equalCookieThatShouldBeAdded));
+
+        Cookie addedCookie = persistor.loadAll().get(0);
+        assertEquals(equalCookieThatShouldBeAdded, addedCookie);
+    }
+
     @After
-    public void clearPersistor(){
+    public void clearPersistor() {
         persistor.clear();
     }
 }

@@ -26,6 +26,18 @@ class TestCookieCreator {
         return builder.build();
     }
 
+    public static Cookie createPersistentCookie(String name, String value) {
+        return new Cookie.Builder()
+                .domain("domain.com")
+                .path("/")
+                .name(name)
+                .value(value)
+                .expiresAt(System.currentTimeMillis() + 24 * 60 * 60 * 1000)
+                .httpOnly()
+                .secure()
+                .build();
+    }
+
     public static Cookie createNonPersistentCookie() {
         return new Cookie.Builder()
                 .domain("domain.com")

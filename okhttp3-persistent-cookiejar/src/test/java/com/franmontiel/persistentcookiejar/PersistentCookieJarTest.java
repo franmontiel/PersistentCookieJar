@@ -33,24 +33,31 @@ public class PersistentCookieJarTest {
 
     @Before
     public void createCookieJar() {
-        persistentCookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(RuntimeEnvironment.application.getApplicationContext()));
+        persistentCookieJar = new PersistentCookieJar(
+                new SetCookieCache(),
+                new SharedPrefsCookiePersistor(RuntimeEnvironment.application.getApplicationContext())
+        );
     }
 
+    /**
+     * Test that the cookie is stored and also loaded when the a matching url is given
+     */
     @Test
-    public void regularCookie() throws Exception {
+    public void regularCookie() {
         Cookie cookie = TestCookieCreator.createPersistentCookie(false);
 
         persistentCookieJar.saveFromResponse(url, Collections.singletonList(cookie));
-
         List<Cookie> storedCookies = persistentCookieJar.loadForRequest(url);
 
         assertEquals(cookie, storedCookies.get(0));
     }
 
+    /**
+     * Test that a stored cookie is not loaded for a non matching url.
+     */
     @Test
-    public void differentUrlRequest() throws Exception {
+    public void differentUrlRequest() {
         Cookie cookie = TestCookieCreator.createPersistentCookie(false);
-
         persistentCookieJar.saveFromResponse(url, Collections.singletonList(cookie));
 
         List<Cookie> storedCookies = persistentCookieJar.loadForRequest(HttpUrl.parse("https://otherdomain.com"));
@@ -59,7 +66,25 @@ public class PersistentCookieJarTest {
     }
 
     @Test
-    public void expiredCookie() throws Exception {
+    /**
+     * Test that when receiving a cookie equal(cookie-name, domain-value, and path-value) to one that is already stored then the old cookie is overwritten by the new one.
+     */
+    public void updateCookie() {
+        persistentCookieJar.saveFromResponse(url, Collections.singletonList(TestCookieCreator.createPersistentCookie("name", "first")));
+
+        Cookie newCookie = TestCookieCreator.createPersistentCookie("name", "last");
+        persistentCookieJar.saveFromResponse(url, Collections.singletonList(newCookie));
+
+        List<Cookie> storedCookies = persistentCookieJar.loadForRequest(url);
+        assertTrue(storedCookies.size() == 1);
+        assertEquals(newCookie, storedCookies.get(0));
+    }
+
+    /**
+     * Test that a expired cookie is not retrieved
+     */
+    @Test
+    public void expiredCookie() {
         persistentCookieJar.saveFromResponse(url, Collections.singletonList(TestCookieCreator.createExpiredCookie()));
 
         List<Cookie> cookies = persistentCookieJar.loadForRequest(url);
@@ -67,15 +92,21 @@ public class PersistentCookieJarTest {
         assertTrue(cookies.isEmpty());
     }
 
+    /**
+     * Test that when receiving an expired cookie equal(cookie-name, domain-value, and path-value) to one that is already stored then the old cookie is overwritten by the new one.
+     */
     @Test
-    public void removeCookieWithExpiredOne() throws Exception {
+    public void removeCookieWithExpiredOne() {
         persistentCookieJar.saveFromResponse(url, Collections.singletonList(TestCookieCreator.createPersistentCookie(false)));
-        assertTrue(persistentCookieJar.loadForRequest(url).size() == 1);
 
         persistentCookieJar.saveFromResponse(url, Collections.singletonList(TestCookieCreator.createExpiredCookie()));
+
         assertTrue(persistentCookieJar.loadForRequest(url).isEmpty());
     }
 
+    /**
+     * Test that the session cookies are cleared without affecting to the persisted cookies
+     */
     @Test
     public void clearSessionCookies() {
         Cookie persistentCookie = TestCookieCreator.createPersistentCookie(false);
@@ -89,7 +120,7 @@ public class PersistentCookieJarTest {
     }
 
     @After
-    public void clearCookies() {
+    public void cleanCookieJar() {
         persistentCookieJar.clear();
     }
 }

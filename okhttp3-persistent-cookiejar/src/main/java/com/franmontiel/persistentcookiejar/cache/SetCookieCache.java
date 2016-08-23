@@ -33,17 +33,10 @@ public class SetCookieCache implements CookieCache {
 
     @Override
     public void addAll(Collection<Cookie> newCookies) {
-        updateCookies(IdentifiableCookie.decorateAll(newCookies));
-    }
-
-    /**
-     * All cookies will be added to the collection, already existing cookies will be overwritten by the new ones.
-     *
-     * @param cookies
-     */
-    private void updateCookies(Collection<IdentifiableCookie> cookies) {
-        this.cookies.removeAll(cookies);
-        this.cookies.addAll(cookies);
+        for (IdentifiableCookie cookie : IdentifiableCookie.decorateAll(newCookies)) {
+            this.cookies.remove(cookie);
+            this.cookies.add(cookie);
+        }
     }
 
     @Override
