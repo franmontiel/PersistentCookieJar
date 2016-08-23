@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+Version 1.0.0 *(2016-08-23)*
+----------------------------
+ * Added the method clearSession() to ClearableCookieJar that clear session cookies from the Jar while maintaining persisted cookies.
+ * Added new constructor to SharedPrefsCookiePersistor that accepts a SharedPreferences object.
+ * Some minor changes in SetCookieCache and SharedPrefsCookiePersistor implementations.
+
 Version 0.9.3 *(2016-04-25)*
 ----------------------------
  * Added ProGuard rules to the library. No need to manually add the ProGuard configuration anymore.

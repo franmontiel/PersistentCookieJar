@@ -18,7 +18,7 @@ allprojects {
 Step 2. Add the dependency
 ```groovy
 dependencies {
-    compile 'com.github.franmontiel:PersistentCookieJar:v0.9.3'
+    compile 'com.github.franmontiel:PersistentCookieJar:v1.0.0'
 }
 ```
 Usage
@@ -42,6 +42,8 @@ Features
 --------
 This is a really simple library but here are some of the things that it provides:
 * Possibility to clear the jar: `PersistentCookieJar` implements `ClearableCookieJar` interface that declares a `clear()` method for removing all cookies from the jar.
+
+* Possibility to clear session cookies: `PersistentCookieJar` implements `ClearableCookieJar` interface that declares a `clearSession()` method for removing session cookies from the jar.
 
 * Decoupled and extensible: `CookieCache` and `CookiePersitor` are interfaces so you can provide your own implementation for each one.
     * `CookieCache` represents an in-memory cookie storage. `SetCookieCache` is the provided implementation that uses a Set to store the Cookies.
