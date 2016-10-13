@@ -16,6 +16,7 @@
 
 package com.franmontiel.persistentcookiejar.persistence;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -26,6 +27,7 @@ import java.util.Map;
 
 import okhttp3.Cookie;
 
+@SuppressLint("CommitPrefEdits")
 public class SharedPrefsCookiePersistor implements CookiePersistor {
 
     private final SharedPreferences sharedPreferences;
@@ -54,11 +56,9 @@ public class SharedPrefsCookiePersistor implements CookiePersistor {
     public void saveAll(Collection<Cookie> cookies) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         for (Cookie cookie : cookies) {
-            if (cookie.persistent()) {
-                editor.putString(createCookieKey(cookie), new SerializableCookie().encode(cookie));
-            }
+            editor.putString(createCookieKey(cookie), new SerializableCookie().encode(cookie));
         }
-        editor.apply();
+        editor.commit();
     }
 
     @Override
@@ -67,7 +67,7 @@ public class SharedPrefsCookiePersistor implements CookiePersistor {
         for (Cookie cookie : cookies) {
             editor.remove(createCookieKey(cookie));
         }
-        editor.apply();
+        editor.commit();
     }
 
     private static String createCookieKey(Cookie cookie) {
@@ -76,6 +76,6 @@ public class SharedPrefsCookiePersistor implements CookiePersistor {
 
     @Override
     public void clear() {
-        sharedPreferences.edit().clear().apply();
+        sharedPreferences.edit().clear().commit();
     }
 }

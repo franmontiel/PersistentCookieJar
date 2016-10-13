@@ -41,19 +41,30 @@ public class PersistentCookieJar implements ClearableCookieJar {
     @Override
     synchronized public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
         cache.addAll(cookies);
-        persistor.saveAll(cookies);
+        persistor.saveAll(filterPersistentCookies(cookies));
+    }
+
+    private static List<Cookie> filterPersistentCookies(List<Cookie> cookies) {
+        List<Cookie> persistentCookies = new ArrayList<>();
+
+        for (Cookie cookie : cookies) {
+            if (cookie.persistent()) {
+                persistentCookies.add(cookie);
+            }
+        }
+        return persistentCookies;
     }
 
     @Override
     synchronized public List<Cookie> loadForRequest(HttpUrl url) {
-        List<Cookie> removedCookies = new ArrayList<>();
+        List<Cookie> cookiesToRemove = new ArrayList<>();
         List<Cookie> validCookies = new ArrayList<>();
 
         for (Iterator<Cookie> it = cache.iterator(); it.hasNext(); ) {
             Cookie currentCookie = it.next();
 
             if (isCookieExpired(currentCookie)) {
-                removedCookies.add(currentCookie);
+                cookiesToRemove.add(currentCookie);
                 it.remove();
 
             } else if (currentCookie.matches(url)) {
@@ -61,7 +72,7 @@ public class PersistentCookieJar implements ClearableCookieJar {
             }
         }
 
-        persistor.removeAll(removedCookies);
+        persistor.removeAll(cookiesToRemove);
 
         return validCookies;
     }
@@ -71,11 +82,12 @@ public class PersistentCookieJar implements ClearableCookieJar {
     }
 
     @Override
-    public void clearSession() {
+    synchronized public void clearSession() {
         cache.clear();
         cache.addAll(persistor.loadAll());
     }
 
+    @Override
     synchronized public void clear() {
         cache.clear();
         persistor.clear();
