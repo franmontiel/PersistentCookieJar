@@ -18,6 +18,9 @@ package com.franmontiel.persistentcookiejar;
 
 import okhttp3.CookieJar;
 
+/**
+ * This interface extends {@link okhttp3.CookieJar} and adds methods to clear the cookies.
+ */
 public interface ClearableCookieJar extends CookieJar {
 
     /**

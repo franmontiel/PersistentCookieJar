@@ -20,6 +20,9 @@ import java.util.Collection;
 
 import okhttp3.Cookie;
 
+/**
+ * A CookieCache handles the volatile cookie session storage.
+ */
 public interface CookieCache extends Iterable<Cookie> {
 
     /**

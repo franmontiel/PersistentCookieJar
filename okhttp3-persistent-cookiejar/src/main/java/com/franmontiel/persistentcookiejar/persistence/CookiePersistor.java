@@ -21,6 +21,9 @@ import java.util.List;
 
 import okhttp3.Cookie;
 
+/**
+ * A CookiePersistor handles the persistent cookie storage.
+ */
 public interface CookiePersistor {
 
     List<Cookie> loadAll();
