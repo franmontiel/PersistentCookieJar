@@ -45,15 +45,6 @@ public class SharedPrefsCookiePersistorTest {
     }
 
     @Test
-    public void saveAll_WithNonPersistentCookie_ShouldNotSaveTheCookie() throws Exception {
-        Cookie nonPersistentCookie = TestCookieCreator.createNonPersistentCookie();
-
-        persistor.saveAll(Collections.singletonList(nonPersistentCookie));
-
-        assertTrue(persistor.loadAll().isEmpty());
-    }
-
-    @Test
     public void removeAll_ShouldRemoveCookies() throws Exception {
         Cookie cookie = TestCookieCreator.createPersistentCookie(false);
         persistor.saveAll(Collections.singletonList(cookie));
@@ -74,12 +65,26 @@ public class SharedPrefsCookiePersistorTest {
     }
 
     /**
+     * Cookie equality used to update: same cookie-name, domain-value, and path-value.
+     */
+    @Test
+    public void addAll_WithACookieEqualsToOneAlreadyPersisted_ShouldUpdatePersistedCookie() {
+        persistor.saveAll(Collections.singletonList(TestCookieCreator.createPersistentCookie("name", "first")));
+        Cookie lastCookieThatShouldBeSaved = TestCookieCreator.createPersistentCookie("name", "last");
+
+        persistor.saveAll(Collections.singletonList(lastCookieThatShouldBeSaved));
+
+        Cookie addedCookie = persistor.loadAll().get(0);
+        assertEquals(lastCookieThatShouldBeSaved, addedCookie);
+    }
+
+    /**
      * This is not RFC Compilant but strange things happen in the real world and it is intended to maintain a common behavior between Cache and Persistor
      * <p>
      * Cookie equality used to update: same cookie-name, domain-value, and path-value.
      */
     @Test
-    public void saveAll_WithMultipleEqualCookies_LastOneShouldBeSaved() {
+    public void saveAll_WithMultipleEqualCookies_LastOneShouldBePersisted() {
         Cookie equalCookieThatShouldNotBeAdded = TestCookieCreator.createPersistentCookie("name", "first");
         Cookie equalCookieThatShouldBeAdded = TestCookieCreator.createPersistentCookie("name", "last");
 
