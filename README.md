@@ -45,7 +45,7 @@ This is a really simple library but here are some of the things that it provides
 
 * Possibility to clear session cookies: `PersistentCookieJar` implements `ClearableCookieJar` interface that declares a `clearSession()` method for removing session cookies from the jar.
 
-* Decoupled and extensible: `CookieCache` and `CookiePersitor` are interfaces so you can provide your own implementation for each one.
+* Decoupled and extensible: `CookieCache` and `CookiePersistor` are interfaces so you can provide your own implementation for each one.
     * `CookieCache` represents an in-memory cookie storage. `SetCookieCache` is the provided implementation that uses a Set to store the Cookies.
     * `CookiePersistor` represents a persistent storage. `SharedPrefsCookiePersistor` is the provided implementation that uses a SharedPreferences to persist the Cookies.
 
