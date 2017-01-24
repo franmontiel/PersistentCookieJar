@@ -7,18 +7,26 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Cookie;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.reset;
 
 /**
  * Created by Francisco J. Montiel on 11/02/16.
@@ -28,10 +36,12 @@ import static org.junit.Assert.assertTrue;
 public class SharedPrefsCookiePersistorTest {
 
     private CookiePersistor persistor;
+    private SharedPreferences sharedPreferences;
 
     @Before
     public void createPersistor() {
-        persistor = new SharedPrefsCookiePersistor(RuntimeEnvironment.application.getApplicationContext());
+        sharedPreferences = Mockito.spy(RuntimeEnvironment.application.getApplicationContext().getSharedPreferences("CookiePersistence", Context.MODE_PRIVATE));
+        persistor = new SharedPrefsCookiePersistor(sharedPreferences);
     }
 
     @Test
@@ -96,8 +106,18 @@ public class SharedPrefsCookiePersistorTest {
         assertEquals(equalCookieThatShouldBeAdded, addedCookie);
     }
 
+    @Test
+    public void loadAll_WithCorruptedCookie_ShouldSkipCookie() {
+        Map<String, String> corruptedCookies = new HashMap<>();
+        corruptedCookies.put("key", "invalidCookie_");
+        doReturn(corruptedCookies).when(sharedPreferences).getAll();
+
+        assertTrue(persistor.loadAll().isEmpty());
+    }
+
     @After
     public void clearPersistor() {
         persistor.clear();
+        reset(sharedPreferences);
     }
 }
