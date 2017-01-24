@@ -89,7 +89,7 @@ public class SharedPrefsCookiePersistorTest {
     }
 
     /**
-     * This is not RFC Compilant but strange things happen in the real world and it is intended to maintain a common behavior between Cache and Persistor
+     * This is not RFC compliant but strange things happen in the real world and it is intended to maintain a common behavior between Cache and Persistor
      * <p>
      * Cookie equality used to update: same cookie-name, domain-value, and path-value.
      */
