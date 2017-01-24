@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 1.0.1 *(2017-01-24)*
+----------------------------
+ * Fix: If the SharedPreferences persisting cookies contains invalid data it will be ignored and won't cause a NullPointerException.
+
 Version 1.0.0 *(2016-08-23)*
 ----------------------------
  * Added the method clearSession() to ClearableCookieJar that clear session cookies from the Jar while maintaining persisted cookies.
