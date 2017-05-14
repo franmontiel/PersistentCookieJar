@@ -2,7 +2,7 @@ PersistentCookieJar for OkHttp 3
 ===============================
 A persistent CookieJar implementation for OkHttp 3 based on SharedPreferences.
 
-If you're looking for a OkHttp 2/HTTPUrlConnection persistent CookieStore it can be found at [this Gist] [1].
+If you're looking for a OkHttp 2/HTTPUrlConnection persistent CookieStore it can be found at [this Gist](https://gist.github.com/franmontiel/ed12a2295566b7076161).
 
 Download
 --------
@@ -84,6 +84,3 @@ License
     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
     See the License for the specific language governing permissions and
     limitations under the License.
-
-
-[1]: https://gist.github.com/franmontiel/ed12a2295566b7076161
