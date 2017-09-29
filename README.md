@@ -53,7 +53,7 @@ This is a really simple library but here are some of the things that it provides
 
 ProGuard
 -------
-The following configuration is only needed for version 0.9.2 and below:
+The following configuration is only needed for version 0.9.2 and above:
 ```
 -dontwarn com.franmontiel.persistentcookiejar.**
 -keep class com.franmontiel.persistentcookiejar.**
