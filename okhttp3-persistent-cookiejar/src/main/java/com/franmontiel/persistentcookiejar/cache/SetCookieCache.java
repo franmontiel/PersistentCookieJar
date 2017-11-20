@@ -44,16 +44,17 @@ public class SetCookieCache implements CookieCache {
         cookies.clear();
     }
 
+    @NonNull
     @Override
     public Iterator<Cookie> iterator() {
-        return new SetCookieCacheIterator();
+        return new SetCookieCacheIterator(cookies);
     }
 
     private class SetCookieCacheIterator implements Iterator<Cookie> {
 
         private Iterator<IdentifiableCookie> iterator;
 
-        public SetCookieCacheIterator() {
+        SetCookieCacheIterator(Set<IdentifiableCookie> cookies) {
             iterator = cookies.iterator();
         }
 
