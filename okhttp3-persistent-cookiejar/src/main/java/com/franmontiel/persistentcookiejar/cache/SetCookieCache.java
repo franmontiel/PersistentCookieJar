@@ -28,7 +28,7 @@ public class SetCookieCache implements CookieCache {
     private Set<IdentifiableCookie> cookies;
 
     public SetCookieCache() {
-        cookies = new HashSet<>();
+        cookies = Collections.newSetFromMap(new ConcurrentHashMap<IdentifiableCookie, Boolean>());
     }
 
     @Override
