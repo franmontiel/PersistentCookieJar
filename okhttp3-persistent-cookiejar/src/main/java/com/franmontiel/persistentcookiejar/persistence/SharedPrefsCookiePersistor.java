@@ -46,6 +46,9 @@ public class SharedPrefsCookiePersistor implements CookiePersistor {
 
         for (Map.Entry<String, ?> entry : sharedPreferences.getAll().entrySet()) {
             String serializedCookie = (String) entry.getValue();
+            if (serializedCookie == null) {
+                continue;
+            }
             Cookie cookie = new SerializableCookie().decode(serializedCookie);
             if (cookie != null) {
                 cookies.add(cookie);
