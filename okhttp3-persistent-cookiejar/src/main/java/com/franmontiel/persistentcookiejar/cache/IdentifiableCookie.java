@@ -55,7 +55,6 @@ class IdentifiableCookie {
         return that.cookie.name().equals(this.cookie.name())
                 && that.cookie.domain().equals(this.cookie.domain())
                 && that.cookie.path().equals(this.cookie.path())
-                && that.cookie.secure() == this.cookie.secure()
                 && that.cookie.hostOnly() == this.cookie.hostOnly();
     }
 
@@ -65,7 +64,6 @@ class IdentifiableCookie {
         hash = 31 * hash + cookie.name().hashCode();
         hash = 31 * hash + cookie.domain().hashCode();
         hash = 31 * hash + cookie.path().hashCode();
-        hash = 31 * hash + (cookie.secure() ? 0 : 1);
         hash = 31 * hash + (cookie.hostOnly() ? 0 : 1);
         return hash;
     }
