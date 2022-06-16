@@ -28,10 +28,10 @@ android {
 }
 
 dependencies {
-    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
 
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'androidx.test:core:1.4.0'
-    testImplementation 'org.robolectric:robolectric:4.7.2'
+    testImplementation 'org.robolectric:robolectric:4.7.3'
     testImplementation 'org.mockito:mockito-core:2.23.4'
 }
