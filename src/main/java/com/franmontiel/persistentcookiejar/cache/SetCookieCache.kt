@@ -52,6 +52,6 @@ class SetCookieCache : CookieCache {
     }
 
     init {
-        cookies = HashSet()
+        cookies = Collections.synchronizedSet(HashSet())
     }
 }
